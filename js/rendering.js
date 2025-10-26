@@ -80,7 +80,6 @@ function render(highlightPath) {
 		ctx.lineWidth = 2;
 		ctx.strokeStyle = "#888";
 		ctx.stroke();
-		// weight label
 		const mx = (a.x + b.x) / 2,
 			my = (a.y + b.y) / 2;
 		ctx.font = "12px sans-serif";
