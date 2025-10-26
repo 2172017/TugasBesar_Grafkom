@@ -50,11 +50,9 @@ function logMsg(s) {
 		new Date().toLocaleTimeString() + " — " + s + "\n" + log.textContent;
 }
 
-// rendering loop
 function render(highlightPath) {
 	ctx.clearRect(0, 0, canvasKita.width, canvasKita.height);
 
-	// optionally heatmap: color node background by tentative dist from source
 	if (showHeat.checked && sourceId) {
 		const maxd = Math.max(
 			...graph.nodes.map((n) =>
@@ -73,7 +71,6 @@ function render(highlightPath) {
 		});
 	}
 
-	// edges
 	graph.edges.forEach((e) => {
 		const a = graph.getNode(e.a),
 			b = graph.getNode(e.b);
@@ -91,7 +88,6 @@ function render(highlightPath) {
 		ctx.fillText(e.w.toFixed(0), mx + 6, my - 6);
 	});
 
-	// highlight path
 	if (highlightPath && highlightPath.length > 1) {
 		ctx.strokeStyle = "#e53935";
 		ctx.lineWidth = 4;
@@ -105,7 +101,6 @@ function render(highlightPath) {
 		ctx.stroke();
 	}
 
-	// nodes
 	graph.nodes.forEach((n) => {
 		ctx.beginPath();
 		ctx.arc(n.x, n.y, 12, 0, Math.PI * 2);
