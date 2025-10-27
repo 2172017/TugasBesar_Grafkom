@@ -1,21 +1,4 @@
-import {
-	gbr_titik,
-	lingkaran_polar,
-	ellipse_polar,
-	gbr_lingkaran,
-	dda_line,
-	polyline,
-	polygon,
-	floodFillNaive,
-	floodFillStack,
-	render,
-	clearCanvas,
-	plotDot,
-	drawLine,
-	drawCircle,
-} from "./grafika_lib.js";
-
-export function render(
+function render(
 	graph,
 	highlightPath = [],
 	visited = [],
@@ -45,11 +28,11 @@ export function render(
 	}
 }
 
-export function clearCanvas() {
+function clearCanvas() {
 	ctx.clearRect(0, 0, canvasKita.width, canvasKita.height);
 }
 
-export function drawCircle(xc, yc, r, color) {
+function drawCircle(xc, yc, r, color) {
 	let x = 0;
 	let y = r;
 	let p = 1 - r;
@@ -72,7 +55,7 @@ export function drawCircle(xc, yc, r, color) {
 	}
 }
 
-export function gbr_titik(imageDataTemp, x, y, r, g, b) {
+function gbr_titik(imageDataTemp, x, y, r, g, b) {
 	var index;
 	if (x > 0 && x < canvasKita.width && y > 0 && y < canvasKita.height) {
 		index = 4 * (x + y * canvasKita.width);
@@ -82,40 +65,27 @@ export function gbr_titik(imageDataTemp, x, y, r, g, b) {
 		imageDataTemp.data[index + 3] = 255;
 	}
 }
-
-export function lingkaran_polar(imageDataTemp, xc, yc, radius, r, g, b) {
+function lingkaran_polar(imageDataTemp, xc, yc, radius, r, g, b) {
 	for (var theta = 0; theta < Math.PI * 2; theta += 0.01) {
 		x = xc + radius * Math.cos(theta);
 		y = yc + radius * Math.sin(theta);
 		gbr_titik(imageDataTemp, Math.ceil(x), Math.ceil(y), r, g, b);
 	}
 }
-
-export function ellipse_polar(
-	imageDataTemp,
-	xc,
-	yc,
-	radiusX,
-	radiusY,
-	r,
-	g,
-	b
-) {
+function ellipse_polar(imageDataTemp, xc, yc, radiusX, radiusY, r, g, b) {
 	for (var theta = 0; theta < Math.PI * 2; theta += 0.01) {
 		x = xc + radiusX * Math.cos(theta);
 		y = yc + radiusY * Math.sin(theta);
 		gbr_titik(imageDataTemp, Math.ceil(x), Math.ceil(y), r, g, b);
 	}
 }
-
-export function gbr_lingkaran(imageDataTemp, xc, yc, radius, r, g, b) {
+function gbr_lingkaran(imageDataTemp, xc, yc, radius, r, g, b) {
 	for (var x = xc - radius; x < xc + radius; x++) {
 		var y = yc - Math.sqrt(Math.pow(radius, 2) - Math.pow(x - xc, 2));
 		gbr_titik(imageDataTemp, Math.ceil(x), Math.ceil(y), r, g, b);
 	}
 }
-
-export function dda_line(imageData, x1, y1, x2, y2, r, g, b) {
+function dda_line(imageData, x1, y1, x2, y2, r, g, b) {
 	var dx = x2 - x1;
 	var dy = y2 - y1;
 	if (Math.abs(dx) > Math.abs(dy)) {
@@ -148,8 +118,7 @@ export function dda_line(imageData, x1, y1, x2, y2, r, g, b) {
 		}
 	}
 }
-
-export function polyline(imageData, point_array, r, g, b) {
+function polyline(imageData, point_array, r, g, b) {
 	var point = point_array[0];
 	for (var i = 1; i < point_array.length; i++) {
 		var point_2 = point_array[i];
@@ -157,8 +126,7 @@ export function polyline(imageData, point_array, r, g, b) {
 		point = point_2;
 	}
 }
-
-export function polygon(imageData, point_array, r, g, b) {
+function polygon(imageData, point_array, r, g, b) {
 	var point = point_array[0];
 	for (var i = 1; i < point_array.length; i++) {
 		var point_2 = point_array[i];
@@ -176,8 +144,7 @@ export function polygon(imageData, point_array, r, g, b) {
 		b
 	);
 }
-
-export function floodFillNaive(imageData, canvas, x, y, toFlood, color) {
+function floodFillNaive(imageData, canvas, x, y, toFlood, color) {
 	var index = 4 * (x + y * canvas.width);
 	var r1 = imageData.data[index];
 	var g1 = imageData.data[index + 1];
@@ -189,8 +156,7 @@ export function floodFillNaive(imageData, canvas, x, y, toFlood, color) {
 		imageData.data[index + 3] = 255;
 	}
 }
-
-export function floodFillStack(imageData, canvas, x, y, toFlood, color) {
+function floodFillStack(imageData, canvas, x, y, toFlood, color) {
 	var tumpukan = [];
 	tumpukan.push({ x: x, y: y });
 	while (tumpukan.length > 0) {

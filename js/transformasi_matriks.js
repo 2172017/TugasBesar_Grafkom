@@ -1,16 +1,4 @@
-import {
-	createIdentity,
-	multiplyMatrix,
-	createTranslation,
-	createScale,
-	createRotation,
-	rotation_fp,
-	scale_fp,
-	transform_titik,
-	transform_array,
-} from "./transformasi_matriks.js";
-
-export function createIdentity() {
+function createIdentity() {
 	var identitas = [
 		[1, 0, 0],
 		[0, 1, 0],
@@ -19,7 +7,7 @@ export function createIdentity() {
 	return identitas;
 }
 
-export function multiplyMatrix(m1, m2) {
+function multiplyMatrix(m1, m2) {
 	var hasil = [
 		[0, 0, 0],
 		[0, 0, 0],
@@ -35,7 +23,7 @@ export function multiplyMatrix(m1, m2) {
 	return hasil;
 }
 
-export function createTranslation(Tx, Ty) {
+function createTranslation(Tx, Ty) {
 	var translasi = [
 		[1, 0, Tx],
 		[0, 1, Ty],
@@ -44,7 +32,7 @@ export function createTranslation(Tx, Ty) {
 	return translasi;
 }
 
-export function createScale(Sx, Sy) {
+function createScale(Sx, Sy) {
 	var skala = [
 		[Sx, 0, 0],
 		[0, Sy, 0],
@@ -53,7 +41,7 @@ export function createScale(Sx, Sy) {
 	return skala;
 }
 
-export function createRotation(theta) {
+function createRotation(theta) {
 	var rotasi = [
 		[Math.cos(theta), -Math.sin(theta), 0],
 		[Math.sin(theta), Math.cos(theta), 0],
@@ -62,7 +50,7 @@ export function createRotation(theta) {
 	return rotasi;
 }
 
-export function rotation_fp(xc, yc, theta) {
+function rotation_fp(xc, yc, theta) {
 	var m1 = createTranslation(-xc, -yc);
 	var m2 = createRotation(theta);
 	var m3 = createTranslation(xc, yc);
@@ -72,7 +60,7 @@ export function rotation_fp(xc, yc, theta) {
 	return hasil;
 }
 
-export function scale_fp(xc, yc, Sx, Sy) {
+function scale_fp(xc, yc, Sx, Sy) {
 	var m1 = createTranslation(-xc, -yc);
 	var m2 = createScale(Sx, Sy);
 	var m3 = createTranslation(xc, yc);
@@ -82,13 +70,13 @@ export function scale_fp(xc, yc, Sx, Sy) {
 	return hasil;
 }
 
-export function transform_titik(titik_lama, m) {
+function transform_titik(titik_lama, m) {
 	var x_baru = m[0][0] * titik_lama.x + m[0][1] * titik_lama.y + m[0][2] * 1;
 	var y_baru = m[1][0] * titik_lama.x + m[1][1] * titik_lama.y + m[1][2] * 1;
 	return { x: x_baru, y: y_baru };
 }
 
-export function transform_array(array_titik, m) {
+function transform_array(array_titik, m) {
 	var hasil = [];
 	for (var i = 0; i < array_titik.length; i++) {
 		var titik_hasil;
