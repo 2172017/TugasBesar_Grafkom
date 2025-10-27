@@ -1,62 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
-		<title>Transformasi komposit</title>
-		<style>
-			canvas {
-				border: 2px solid black;
-			}
-		</style>
-		<script src="js/grafika_lib.js"></script>
-		<script src="js/transformasi_matriks.js"></script>
-	</head>
-	<body>
-		<canvas id="canvas1" width="400" height="400"></canvas>
-		<script>
-			var canvasKita = document.querySelector("#canvas1");
-			var ctx = canvasKita.getContext("2d");
-			var imageDataSaya = ctx.getImageData(
-				0,
-				0,
-				canvasKita.width,
-				canvasKita.height
-			);
-			var point_array = [
-				{ x: 100, y: 100 },
-				{ x: 150, y: 150 },
-				{ x: 50, y: 150 },
-			];
-			polygon(imageDataSaya, point_array, 255, 0, 0);
-			var m = createTranslation(10, 0);
-			var p2 = transform_array(point_array, m);
-			polygon(imageDataSaya, p2, 0, 255, 0);
-			var timer = 0;
-			var geser = 0;
-			var sudut = 0;
-			function draw() {
-				ctx.clearRect(0, 0, canvasKita.width, canvasKita.height);
-				imageDataSaya = ctx.getImageData(
-					0,
-					0,
-					canvasKita.width,
-					canvasKita.height
-				);
-				dda_line(imageDataSaya, 0, 100, canvasKita.width, 100, 0, 0, 0);
-				var t = createTranslation(geser, 0);
-				var r = rotation_fp(point_array[0].x, point_array[0].y, sudut);
-				m = multiplyMatrix(t, r);
-				geser += 10;
-				sudut += 1;
-				p2 = transform_array(point_array, m);
-				polygon(imageDataSaya, p2, 0, 255, 0);
-				ctx.putImageData(imageDataSaya, 0, 0);
-				requestAnimationFrame(draw);
-			}
-			ctx.putImageData(imageDataSaya, 0, 0);
-			draw();
-		</script>
-	</body>
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <canvas width="600" height="600" id="mycanvas"></canvas>
+  <script type="module" src="index.js"></script>
+  <script src="index.js"></script>
+</body>
 </html>

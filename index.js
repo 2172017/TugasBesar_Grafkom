@@ -1,0 +1,63 @@
+const canvas = document.getElementById('mycanvas');
+const context = canvas.getContext('2d');
+const boxSize = 20;
+const points = [];
+
+const polygon = (context, points, fill = false, stroke = true) => {
+    if (points.length < 2) return;
+    context.beginPath();
+    context.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) {
+        context.lineTo(points[i].x, points[i].y);
+    }
+    context.closePath();
+    if (fill) {
+        context.fill();
+    }
+    if (stroke) {
+        context.stroke();
+    }
+};
+
+const polyline = (context, points, stroke = true) => {
+    if (points.length < 2) return;
+    context.beginPath();
+    context.moveTo(points[0].x, points[0].y);
+    for (let i = 1; i < points.length; i++) {
+        context.lineTo(points[i].x, points[i].y);
+    }
+    if (stroke) {
+        context.stroke();
+    }
+};
+
+const drawBox = (x, y) => {
+    context.fillStyle = 'green';
+    context.fillRect(x - boxSize / 2, y - boxSize / 2, boxSize, boxSize);
+    points.push({ x, y });
+};
+
+const redrawCanvas = () => {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    context.fillStyle = 'green';
+    points.forEach(point => {
+        context.fillRect(point.x - boxSize / 2, point.y - boxSize / 2, boxSize, boxSize);
+    });
+
+    if (points.length >= 2) {
+        context.strokeStyle = 'black';
+        context.lineWidth = 2;
+        
+        polyline(context, points);
+    }
+};
+
+canvas.addEventListener('click', (event) => {
+    const rect = canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    drawBox(x, y);
+    redrawCanvas();
+});
