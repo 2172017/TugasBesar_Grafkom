@@ -1,6 +1,6 @@
 const canvas = document.getElementById('mycanvas');
 const context = canvas.getContext('2d');
-const boxSize = 20;
+const circleSizwe = 6;
 const points = [];
 
 const polygon = (context, points, fill = false, stroke = true) => {
@@ -31,26 +31,42 @@ const polyline = (context, points, stroke = true) => {
     }
 };
 
+const drawCircle = (x, y, radius) => {
+    context.beginPath();
+    context.arc(x, y, radius, 0, Math.PI * 2);
+    context.fill();
+};
+
 const drawBox = (x, y) => {
-    context.fillStyle = 'green';
-    context.fillRect(x - boxSize / 2, y - boxSize / 2, boxSize, boxSize);
     points.push({ x, y });
+    drawCircle(x, y, circleSizwe);
+};
+
+const ddaLine = (x0, y0, x1, y1) => {
+    const dx = x1 - x0;
+    const dy = y1 - y0;
+    const steps = Math.max(Math.abs(dx), Math.abs(dy));
+    const xInc = dx / steps;
+    const yInc = dy / steps;
+    let x = x0;
+    let y = y0;
+    for (let i = 0; i <= steps; i++) {
+        drawCircle(Math.round(x), Math.round(y), 1);
+        x += xInc;
+        y += yInc;
+    }
 };
 
 const redrawCanvas = () => {
-    context.clearRect(0, 0, canvas.width, canvas.height);
-
-    context.fillStyle = 'green';
+    context.clearRect(1, 0, canvas.width, canvas.height);
+    // Draw all points
     points.forEach(point => {
-        context.fillRect(point.x - boxSize / 2, point.y - boxSize / 2, boxSize, boxSize);
+        drawCircle(point.x, point.y, circleSizwe);
     });
-
-    if (points.length >= 2) {
-        context.strokeStyle = 'black';
-        context.lineWidth = 2;
-        
-        polyline(context, points);
-    }
+    // Draw polyline
+    polyline(context, points);
+    // Draw polygon
+    polygon(context, points);
 };
 
 canvas.addEventListener('click', (event) => {
