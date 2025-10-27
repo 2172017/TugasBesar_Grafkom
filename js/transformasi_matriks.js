@@ -41,9 +41,9 @@ function transform_titik(titik_lama, m) {
 	return { x: xbaru, y: ybaru };
 }
 function transform_array(array_titik, m) {
-	var out = [];
+	var hasil = [];
 	for (var i = 0; i < array_titik.length; i++) {
 		out.push(transform_titik(array_titik[i], m));
 	}
-	return out;
+	return hasil;
 }
