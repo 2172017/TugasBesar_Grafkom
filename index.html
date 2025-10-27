@@ -4,59 +4,83 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
-		<title>Transformasi komposit</title>
-		<style>
-			canvas {
-				border: 2px solid black;
-			}
-		</style>
+		<title>Tugas Besar UTS IN253 Grafika Komputer</title>
+		<style src="css/style.css"></style>
 		<script src="js/grafika_lib.js"></script>
+		<script src="js/transform.js"></script>
 		<script src="js/transformasi_matriks.js"></script>
 	</head>
 	<body>
-		<canvas id="canvas1" width="400" height="400"></canvas>
+		<canvas id="canvas1" width="600" height="600"></canvas>
 		<script>
-			var canvasKita = document.querySelector("#canvas1");
-			var ctx = canvasKita.getContext("2d");
-			var imageDataSaya = ctx.getImageData(
-				0,
-				0,
-				canvasKita.width,
-				canvasKita.height
-			);
-			var point_array = [
-				{ x: 100, y: 100 },
-				{ x: 150, y: 150 },
-				{ x: 50, y: 150 },
-			];
-			polygon(imageDataSaya, point_array, 255, 0, 0);
-			var m = createTranslation(10, 0);
-			var p2 = transform_array(point_array, m);
-			polygon(imageDataSaya, p2, 0, 255, 0);
-			var timer = 0;
-			var geser = 0;
-			var sudut = 0;
-			function draw() {
-				ctx.clearRect(0, 0, canvasKita.width, canvasKita.height);
-				imageDataSaya = ctx.getImageData(
-					0,
-					0,
-					canvasKita.width,
-					canvasKita.height
-				);
-				dda_line(imageDataSaya, 0, 100, canvasKita.width, 100, 0, 0, 0);
-				var t = createTranslation(geser, 0);
-				var r = rotation_fp(point_array[0].x, point_array[0].y, sudut);
-				m = multiplyMatrix(t, r);
-				geser += 10;
-				sudut += 1;
-				p2 = transform_array(point_array, m);
-				polygon(imageDataSaya, p2, 0, 255, 0);
-				ctx.putImageData(imageDataSaya, 0, 0);
-				requestAnimationFrame(draw);
-			}
-			ctx.putImageData(imageDataSaya, 0, 0);
-			draw();
+			const canvas = document.getElementById("canvas1");
+			const context = canvas.getContext("2d");
+			const boxSize = 20;
+			const points = [];
+
+			const polygon = (context, points, fill = false, stroke = true) => {
+				if (points.length < 2) return;
+				context.beginPath();
+				context.moveTo(points[0].x, points[0].y);
+				for (let i = 1; i < points.length; i++) {
+					context.lineTo(points[i].x, points[i].y);
+				}
+				context.closePath();
+				if (fill) {
+					context.fill();
+				}
+				if (stroke) {
+					context.stroke();
+				}
+			};
+
+			const polyline = (context, points, stroke = true) => {
+				if (points.length < 2) return;
+				context.beginPath();
+				context.moveTo(points[0].x, points[0].y);
+				for (let i = 1; i < points.length; i++) {
+					context.lineTo(points[i].x, points[i].y);
+				}
+				if (stroke) {
+					context.stroke();
+				}
+			};
+
+			const drawBox = (x, y) => {
+				context.fillStyle = "green";
+				context.fillRect(x - boxSize / 2, y - boxSize / 2, boxSize, boxSize);
+				points.push({ x, y });
+			};
+
+			const redrawCanvas = () => {
+				context.clearRect(0, 0, canvas.width, canvas.height);
+
+				context.fillStyle = "green";
+				points.forEach((point) => {
+					context.fillRect(
+						point.x - boxSize / 2,
+						point.y - boxSize / 2,
+						boxSize,
+						boxSize
+					);
+				});
+
+				if (points.length >= 2) {
+					context.strokeStyle = "black";
+					context.lineWidth = 2;
+
+					polyline(context, points);
+				}
+			};
+
+			canvas.addEventListener("click", (event) => {
+				const rect = canvas.getBoundingClientRect();
+				const x = event.clientX - rect.left;
+				const y = event.clientY - rect.top;
+
+				drawBox(x, y);
+				redrawCanvas();
+			});
 		</script>
 	</body>
 </html>
