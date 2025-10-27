@@ -1,28 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<meta charset="utf-8" />
-		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
 		<title>Tugas Besar UTS IN253 Grafika Komputer</title>
-		<style src="css/style.css"></style>
+		<style></style>
 		<script src="js/grafika_lib.js"></script>
 		<script src="js/transform.js"></script>
 		<script src="js/transformasi_matriks.js"></script>
 	</head>
 	<body>
-		<div id="left">
-			<h3>Route Explorer</h3>
-		</div>
-
-		<div id="canvas-wrap">
-			<canvas id="c" width="900" height="700"></canvas>
-		</div>
-
+		<canvas id="canvas1" width="400" height="400"></canvas>
 		<script>
-			const canvasKita = document.querySelector("#c");
-			const ctx = canvasKita.getContext("2d");
-			canvasKita.addEventListener("mousedown", (e) => {});
-			canvasKita.addEventListener("mousemove", (e) => {});
+			var canvasKita = document.querySelector("#canvas1");
+			var ctx = canvasKita.getContext("2d");
+			var imageDataSaya = ctx.getImageData(
+				0,
+				0,
+				canvasKita.width,
+				canvasKita.height
+			);
+			var point_array = [
+				{ x: 100, y: 100 },
+				{ x: 150, y: 150 },
+				{ x: 50, y: 150 },
+			];
+			polygon(imageDataSaya, point_array, 255, 0, 0);
+			var m = createTranslation(10, 0);
+			var p2 = transform_array(point_array, m);
+			polygon(imageDataSaya, p2, 0, 255, 0);
+			var timer = 0;
+			var geser = 0;
+			var sudut = 0;
+			function draw() {
+				ctx.clearRect(0, 0, canvasKita.width, canvasKita.height);
+				imageDataSaya = ctx.getImageData(
+					0,
+					0,
+					canvasKita.width,
+					canvasKita.height
+				);
+				dda_line(imageDataSaya, 0, 100, canvasKita.width, 100, 0, 0, 0);
+				var t = createTranslation(geser, 0);
+				var r = rotation_fp(point_array[0].x, point_array[0].y, sudut);
+				m = multiplyMatrix(t, r);
+				geser += 10;
+				sudut += 1;
+				p2 = transform_array(point_array, m);
+				polygon(imageDataSaya, p2, 0, 255, 0);
+				ctx.putImageData(imageDataSaya, 0, 0);
+				requestAnimationFrame(draw);
+			}
+			ctx.putImageData(imageDataSaya, 0, 0);
+			draw();
 		</script>
 	</body>
 </html>
