@@ -8,6 +8,7 @@ import {
 	polygon,
 	floodFillNaive,
 	floodFillStack,
+	render,
 	clearCanvas,
 	plotDot,
 	drawLine,
