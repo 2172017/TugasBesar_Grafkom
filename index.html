@@ -51,7 +51,18 @@
 			function drawBox(x, y) {
 				context.fillStyle = "green";
 				context.fillRect(x - boxSize / 2, y - boxSize / 2, boxSize, boxSize);
-				points.push({ x, y });
+			
+				// Gambar node
+				const label = points.length + 1;
+				points.push({ x, y, label });
+			
+				// Gambar angka
+				context.fillStyle = "white";
+				context.font = "12px Arial";
+				context.textAlign = "center";
+				context.textBaseline = "middle";
+				context.fillText(label, x, y);
+
 			}
 			// Fungsi gambar kotak
 
@@ -60,16 +71,24 @@
 			function redrawCanvas() {
 				context.clearRect(0, 0, canvas.width, canvas.height);
 
-				context.fillStyle = "green";
+				// Gambar semua kotak dan label
 				points.forEach((point) => {
+					context.fillStyle = "green";
 					context.fillRect(
 						point.x - boxSize / 2,
 						point.y - boxSize / 2,
 						boxSize,
 						boxSize
 					);
+			
+					context.fillStyle = "white";
+					context.font = "12px Arial";
+					context.textAlign = "center";
+					context.textBaseline = "middle";
+					context.fillText(point.label, point.x, point.y);
 				});
-
+			
+				// Gambar garis antar node
 				if (points.length >= 2) {
 					context.strokeStyle = "black";
 					context.lineWidth = 2;
