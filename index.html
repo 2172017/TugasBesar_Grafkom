@@ -14,11 +14,14 @@
 		<h1>Tugas Besar UTS IN253 Grafika Komputer</h1>
 		<canvas id="canvas1" width="600" height="600"></canvas>
 		<script>
+			// Inisiasi canvas
 			const canvas = document.getElementById("canvas1");
 			const context = canvas.getContext("2d");
 			const boxSize = 20;
 			const points = [];
+			// Inisiasi canvas
 
+			// Fungsi Polygon
 			function polygon(context, points, fill = false, stroke = true) {
 				if (points.length < 2) return;
 				context.beginPath();
@@ -30,7 +33,9 @@
 				if (fill) context.fill();
 				if (stroke) context.stroke();
 			}
+			// Fungsi Polygon
 
+			// Fungsi Polyline
 			function polyline(context, points, stroke = true) {
 				if (points.length < 2) return;
 				context.beginPath();
@@ -40,13 +45,18 @@
 				}
 				if (stroke) context.stroke();
 			}
+			// Fungsi Polyline
 
+			// Fungsi gambar kotak
 			function drawBox(x, y) {
 				context.fillStyle = "green";
 				context.fillRect(x - boxSize / 2, y - boxSize / 2, boxSize, boxSize);
 				points.push({ x, y });
 			}
+			// Fungsi gambar kotak
 
+			
+			//fungsi menggambar ulang canvas
 			function redrawCanvas() {
 				context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -66,13 +76,15 @@
 					polyline(context, points);
 				}
 			}
+			//fungsi menggambar ulang canvas
 
-			canvas.addEventListener("click", (event) => {
+			// Script untuk Event
+			canvas.addEventListener("click", (event) => { //Mendapatkan event dari click
 				const rect = canvas.getBoundingClientRect();
 				const x = event.clientX - rect.left;
 				const y = event.clientY - rect.top;
-				drawBox(x, y);
-				redrawCanvas();
+				drawBox(x, y); //gambar kotak pada posisi klik
+				redrawCanvas(); //gambar ulang seluruh canvas
 			});
 		</script>
 	</body>

@@ -1,11 +1,11 @@
-function render(
+function render( //redraw canvas
 	graph,
 	highlightPath = [],
 	visited = [],
 	sourceId = null,
 	targetId = null
 ) {
-	clearCanvas();
+	clearCanvas(); 
 
 	for (const e of graph.edges) {
 		const a = graph.getNode(e.a);
@@ -28,7 +28,7 @@ function render(
 	}
 }
 
-function clearCanvas() {
+function clearCanvas() { //Hapus isi canvas
 	ctx.clearRect(0, 0, canvasKita.width, canvasKita.height);
 }
 
