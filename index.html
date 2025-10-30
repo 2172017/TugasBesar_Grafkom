@@ -142,8 +142,6 @@
 			const rect = canvas.getBoundingClientRect();
             const x = event.clientX - rect.left;
             const y = event.clientY - rect.top;
-            
-           
             const clickedNode = findNode(x, y); 
             if (editMode) {
                 // jika mode ubah aktif
@@ -154,7 +152,6 @@
                         clickedNode.label = newLabel;
                     }
                 }
-            
             } else {
                 // jika mode ubah mati
                 if (!clickedNode) {
@@ -162,7 +159,6 @@
                     drawBox(x, y); 
                 }
             }
-
             redrawCanvas(); // gambar ulang seluruh canvas
         });
         
