@@ -21,6 +21,9 @@
 			const points = [];
 			// Inisiasi canvas
 
+			 const tombolEdit = document.getElementById("tombolEdit");
+       		 let editMode = false;
+			
 			// Fungsi Polygon
 			function polygon(context, points, fill = false, stroke = true) {
 				if (points.length < 2) return;
@@ -81,13 +84,28 @@
 						boxSize
 					);
 			
-					context.fillStyle = "white";
-					context.font = "12px Arial";
-					context.textAlign = "center";
-					context.textBaseline = "middle";
-					context.fillText(point.label, point.x, point.y);
-				});
-			
+					const textMargin = 4; 
+                	context.font = "12px Arial";
+                	context.textAlign = "center";
+					const pengukuranTeks = context.measureText(point.label);
+					const lebarTeks = pengukuranTeks.width;
+                	const padding = 4; 
+
+					if (lebarTeks < boxSize - padding) {
+                    // jika text muat didalam node kotak, buat textnya didalam kotak 
+	                    context.fillStyle = "white"; 
+	                    context.textBaseline = "middle"; 
+	                    context.fillText(point.label, point.x, point.y);
+               		} else {
+                    //  jika text tidak muat didalam node kotak, buat textnya diluar node  atau kotak 
+	                    context.fillStyle = "black"; 
+	                    context.textBaseline = "top"; 
+	                    const yPos = point.y + (boxSize / 2) + textMargin;
+	                    context.fillText(point.label, point.x, yPos);
+                	}
+            	});
+        
+		
 				// Gambar garis antar node
 				if (points.length >= 2) {
 					context.strokeStyle = "black";
@@ -95,16 +113,59 @@
 					polyline(context, points);
 				}
 			}
-			//fungsi menggambar ulang canvas
+			//fungsi mengecek  klik mengenai node (kotak) atau tidak
+			function findNode(x, y) {
+            const jaraktepi = boxSize / 2;
+            for (let i = points.length - 1; i >= 0; i--) { 
+                const point = points[i];
+                if (x >= point.x - jaraktepi && x <= point.x +jaraktepi && y >= point.y - jaraktepi && y <= point.y + jaraktepi) {
+                    return point; 
+                }
+            }
+        }
+			// Script untuk Event tomboledit 
+        	tombolEdit.addEventListener("click", () => {
+            editMode = !editMode; 
+            if (editMode) {
+                tombolEdit.textContent = "Mode Ubah Node (Aktif)";
+                tombolEdit.style.backgroundColor = "lightgreen";
+                canvas.style.cursor = "default"; 
+            } else {
+                tombolEdit.textContent = "Mode Ubah Node (Mati)";
+                tombolEdit.style.backgroundColor = "";
+                canvas.style.cursor = "crosshair"; 
+            }
+        });
 
 			// Script untuk Event
-			canvas.addEventListener("click", (event) => { //Mendapatkan event dari click
-				const rect = canvas.getBoundingClientRect();
-				const x = event.clientX - rect.left;
-				const y = event.clientY - rect.top;
-				drawBox(x, y); //gambar kotak pada posisi klik
-				redrawCanvas(); //gambar ulang seluruh canvas
-			});
+			canvas.addEventListener("click", (event) => {
+			const rect = canvas.getBoundingClientRect();
+            const x = event.clientX - rect.left;
+            const y = event.clientY - rect.top;
+            
+           
+            const clickedNode = findNode(x, y); 
+            if (editMode) {
+                // jika mode ubah aktif
+                if (clickedNode) {
+                    // jika klik node maka minta nama baru
+                    const newLabel = prompt("Masukkan label baru untuk node:", clickedNode.label);
+                    if (newLabel !== null && newLabel.trim() !== "") {
+                        clickedNode.label = newLabel;
+                    }
+                }
+            
+            } else {
+                // jika mode ubah mati
+                if (!clickedNode) {
+                    // buat node baru
+                    drawBox(x, y); 
+                }
+            }
+
+            redrawCanvas(); // gambar ulang seluruh canvas
+        });
+        
 		</script>
 	</body>
 </html>
