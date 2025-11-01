@@ -1,12 +1,26 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>Graph Dijkstra Visualizer</title>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <canvas width="600" height="600" id="mycanvas"></canvas>
-  <script type="module" src="index.js"></script>
-  <script src="index.js"></script>
+
+<h3>Graph + Dijkstra Pathfinding</h3>
+
+<div id="controls">
+  <button id="btn-reset">Reset</button>
+  <button id="btn-set-start">Start</button>
+  <button id="btn-set-goal">Goal</button>
+  <button id="btn-run">Dijkstra</button>
+
+</div>
+
+<small>Klik canvas → tambah node. Klik node lain → buat edge.</small>
+
+<canvas id="canvas" width="900" height="650"></canvas>
+
+<script type="module" src="./app.js"></script>
 </body>
 </html>
