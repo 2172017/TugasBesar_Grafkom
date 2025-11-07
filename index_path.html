@@ -13,12 +13,8 @@
 	<body>
 		<h1>Tugas Besar UTS IN253 Grafika Komputer</h1>
 		<canvas id="canvas1" width="600" height="600"></canvas>
-		<div class="buttons">
-			<button id="tombolEdit">Mode Ubah Node (Mati)</button>
-			<button id="tombolPath">Mode Buat Path (Mati)</button>
-			<button id="tombolMove">Mode Pindah Node (Mati)</button>
-		</div>
-		
+		<button id="tombolEdit">Mode Ubah Node (Mati)</button>
+		<button id="tombolPath">Mode Buat Path (Mati)</button>
 		<script type="module">
 			import { dda_line, drawSquare } from "./js/grafika_lib.js";
 			
@@ -30,16 +26,9 @@
 	  
 			const tombolEdit = document.getElementById("tombolEdit");
 			const tombolPath = document.getElementById("tombolPath");
-			const tombolMove = document.getElementById("tombolMove");
-
 			let editMode = false;
 			let pathMode = false;
-			let moveMode = false;
 	  
-			let draggingNode = null;
-			let offsetX = 0;
-			let offsetY = 0;
-
 			let startNode = null;
 			let endNode = null;
 	  
@@ -105,98 +94,49 @@
 	  
 			// Tombol Edit Mode
 			tombolEdit.addEventListener("click", () => {
-				editMode = !editMode;
-				pathMode = moveMode = false;
-				resetButtons();
-				if (editMode) {
-					tombolEdit.textContent = "Mode Ubah Node (Aktif)";
-					tombolEdit.style.backgroundColor = "lightgreen";
-					canvas.style.cursor = "default";
-				} else {
-					tombolEdit.textContent = "Mode Ubah Node (Mati)";
-					canvas.style.cursor = "crosshair";
-				}
+			  editMode = !editMode;
+			  pathMode = false;
+			  tombolPath.textContent = "Mode Buat Path (Mati)";
+			  tombolPath.style.backgroundColor = "";
+			  startNode = null;
+			  endNode = null;
+			  redrawCanvas();
+	  
+			  if (editMode) {
+				tombolEdit.textContent = "Mode Ubah Node (Aktif)";
+				tombolEdit.style.backgroundColor = "lightgreen";
+				canvas.style.cursor = "default";
+			  } else {
+				tombolEdit.textContent = "Mode Ubah Node (Mati)";
+				tombolEdit.style.backgroundColor = "";
+				canvas.style.cursor = "crosshair";
+			  }
 			});
 			// Tombol Edit Mode
 	  
 			// Tombol Path Mode
 			tombolPath.addEventListener("click", () => {
-				pathMode = !pathMode;
-				editMode = moveMode = false;
-				resetButtons();
-				if (pathMode) {
-					tombolPath.textContent = "Mode Buat Path (Aktif)";
-					tombolPath.style.backgroundColor = "lightblue";
-					canvas.style.cursor = "pointer";
-				} else {
-					tombolPath.textContent = "Mode Buat Path (Mati)";
-					canvas.style.cursor = "crosshair";
-				}
-			});
-			// Tombol Path Mode
-
-			// Tombol Move Node
-			tombolMove.addEventListener("click", () => {
-				moveMode = !moveMode;
-				editMode = pathMode = false;
-				resetButtons();
-				if (moveMode) {
-					tombolMove.textContent = "Mode Pindah Node (Aktif)";
-					tombolMove.style.backgroundColor = "khaki";
-					canvas.style.cursor = "move";
-				} else {
-					tombolMove.textContent = "Mode Pindah Node (Mati)";
-					canvas.style.cursor = "crosshair";
-				}
-			});
-			//Tombol Move Node
-
-			//Reset semua button
-			function resetButtons() {
-				tombolEdit.textContent = "Mode Ubah Node (Mati)";
-				tombolEdit.style.backgroundColor = "";
+			  pathMode = !pathMode;
+			  editMode = false;
+			  tombolEdit.textContent = "Mode Ubah Node (Mati)";
+			  tombolEdit.style.backgroundColor = "";
+			  startNode = null;
+			  endNode = null;
+	  
+			  if (pathMode) {
+				tombolPath.textContent = "Mode Buat Path (Aktif)";
+				tombolPath.style.backgroundColor = "lightblue";
+				canvas.style.cursor = "pointer";
+			  } else {
 				tombolPath.textContent = "Mode Buat Path (Mati)";
 				tombolPath.style.backgroundColor = "";
-				tombolMove.textContent = "Mode Pindah Node (Mati)";
-				tombolMove.style.backgroundColor = "";
-			}
-			//Reset semua button
+				canvas.style.cursor = "crosshair";
+			  }
+			  redrawCanvas();
+			});
+			// Tombol Path Mode
 	  
-			// Set Dragging
-			canvas.addEventListener("mousedown", (e) => {
-				if (!moveMode) return;
-				const rect = canvas.getBoundingClientRect();
-				const x = e.clientX - rect.left;
-				const y = e.clientY - rect.top;
-				const node = findNode(x, y); //panggil fungsi findNode untuk menentukan node yang diklik
-				if (node) {
-					draggingNode = node;
-					offsetX = x - node.x;
-					offsetY = y - node.y;
-				}
-			});
-			// Set Dragging
-
-			// Dragging Node
-			canvas.addEventListener("mousemove", (e) => {
-				if (moveMode && draggingNode) {
-					const rect = canvas.getBoundingClientRect();
-					const x = e.clientX - rect.left - offsetX;
-					const y = e.clientY - rect.top - offsetY;
-					draggingNode.x = x;
-					draggingNode.y = y;
-					redrawCanvas();
-				}
-			});
-			// Dragging Node
-
-			// Matikan Dragging
-			canvas.addEventListener("mouseup", () => {
-				if (moveMode) draggingNode = null;
-			});
-			// Matikan Dragging
-
-			// Event Klik pada canvas
+			// Klik pada canvas
 			canvas.addEventListener("click", (event) => {
 			  const rect = canvas.getBoundingClientRect();
 			  const x = event.clientX - rect.left;
@@ -216,7 +156,6 @@
 				}
 			  }
 			  // mode edit node untuk mengubah label node 
-
 			  // mode pathNode untuk menambah garis antara node 
 			  else if (pathMode) {
 				if (clickedNode) {
@@ -234,9 +173,11 @@
 				}
 			  }
 			  // mode pathNode untuk menambah garis antara node 
-			  else if (!moveMode && !clickedNode) {
-					drawBox(x, y);
-				}
+			  else {
+				// mode tambah node baru
+				if (!clickedNode) drawBox(x, y);
+			  }
+	  
 			  redrawCanvas();
 			});
 		  </script>		

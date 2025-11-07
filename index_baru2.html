@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+		<title>Tugas Besar UTS IN253 Grafika Komputer</title>
+		<link rel="stylesheet" href="css/style.css" />
+		<script type="module" src="js/grafika_lib.js"></script>
+		<script src="js/transform.js"></script>
+		<script src="js/transformasi_matriks.js"></script>
+	</head>
+	<body>
+		<h1>Tugas Besar UTS IN253 Grafika Komputer</h1>
+		<canvas id="canvas1" width="600" height="600"></canvas>
+		<button id="tombolEdit">Mode Ubah Node (Mati)</button>
+		<button id="tombolPath">Mode Buat Path (Mati)</button>
+		<script>
+			import { dda_line, drawSquare } from "./js/grafika_lib.js";
+			
+			const canvas = document.getElementById("canvas1");
+			const context = canvas.getContext("2d");
+			const boxSize = 20;
+			const points = []; //konstanta untuk menyimpan semua titik node
+			const paths = []; //konstanta untuk menyimpan semua garis
+	  
+			const tombolEdit = document.getElementById("tombolEdit");
+			const tombolPath = document.getElementById("tombolPath");
+			let editMode = false;
+			let pathMode = false;
+	  
+			let startNode = null;
+			let endNode = null;
+	  
+			// Fungsi menggambar ulang semua elemen di canvas
+			function redrawCanvas() {
+			  context.clearRect(0, 0, canvas.width, canvas.height); //membersihkan canvas
+	  
+			  // Gambar path
+			  paths.forEach((path) => {
+				context.strokeStyle = "black";
+				context.lineWidth = 2;
+				context.beginPath();
+				context.moveTo(path.start.x, path.start.y);
+				context.lineTo(path.end.x, path.end.y);
+				context.stroke();
+			  });
+			  // Gambar Path
+	  
+			  // Gambar garis antar node ketika ada node baru
+			  if (points.length > 1) {
+				context.strokeStyle = "#666"; // warna abu untuk garis otomatis
+				context.lineWidth = 1.5;
+				context.beginPath();
+				context.moveTo(points[0].x, points[0].y);
+				for (let i = 1; i < points.length; i++) {
+				  context.lineTo(points[i].x, points[i].y);
+				}
+				context.stroke();
+			  }
+			  // Gambar garis antar node ketika ada node baru
+	  
+			  // Gambar kotak di setiap node
+			  points.forEach((point) => {
+				let warna = "green";
+				if (startNode && point === startNode) warna = "blue";
+				else if (endNode && point === endNode) warna = "red";
+	  
+				context.fillStyle = warna;
+				context.fillRect(
+				  point.x - boxSize / 2,
+				  point.y - boxSize / 2,
+				  boxSize,
+				  boxSize
+				);
+				// Gambar kotak di setiap node
+	  
+				// text angka di dalam node
+				context.fillStyle = "white";
+				context.font = "12px Arial";
+				context.textAlign = "center";
+				context.textBaseline = "middle";
+				context.fillText(point.label, point.x, point.y);
+				// text angka di dalam node
+			  });
+			}
+	  
+			// Fungsi menambah node baru
+			function drawBox(x, y) {
+			  const label = points.length + 1;
+			  points.push({ x, y, label });
+			  redrawCanvas();
+			}
+	  
+			// Fungsi mendeteksi klik node
+			function findNode(x, y) {
+			  const half = boxSize / 2;
+			  for (let i = points.length - 1; i >= 0; i--) {
+				const p = points[i];
+				if (x >= p.x - half && x <= p.x + half && y >= p.y - half && y <= p.y + half) {
+				  return p;
+				}
+			  }
+			}
+	  
+			// Tombol Edit Mode
+			tombolEdit.addEventListener("click", () => {
+			  editMode = !editMode;
+			  pathMode = false;
+			  tombolPath.textContent = "Mode Buat Path (Mati)";
+			  tombolPath.style.backgroundColor = "";
+			  startNode = null;
+			  endNode = null;
+			  redrawCanvas();
+	  
+			  if (editMode) {
+				tombolEdit.textContent = "Mode Ubah Node (Aktif)";
+				tombolEdit.style.backgroundColor = "lightgreen";
+				canvas.style.cursor = "default";
+			  } else {
+				tombolEdit.textContent = "Mode Ubah Node (Mati)";
+				tombolEdit.style.backgroundColor = "";
+				canvas.style.cursor = "crosshair";
+			  }
+			});
+	  
+			// Tombol Path Mode
+			tombolPath.addEventListener("click", () => {
+			  pathMode = !pathMode;
+			  editMode = false;
+			  tombolEdit.textContent = "Mode Ubah Node (Mati)";
+			  tombolEdit.style.backgroundColor = "";
+			  startNode = null;
+			  endNode = null;
+	  
+			  if (pathMode) {
+				tombolPath.textContent = "Mode Buat Path (Aktif)";
+				tombolPath.style.backgroundColor = "lightblue";
+				canvas.style.cursor = "pointer";
+			  } else {
+				tombolPath.textContent = "Mode Buat Path (Mati)";
+				tombolPath.style.backgroundColor = "";
+				canvas.style.cursor = "crosshair";
+			  }
+			  redrawCanvas();
+			});
+	  
+			// Klik pada canvas
+			canvas.addEventListener("click", (event) => {
+			  const rect = canvas.getBoundingClientRect();
+			  const x = event.clientX - rect.left;
+			  const y = event.clientY - rect.top;
+			  const clickedNode = findNode(x, y);
+	  
+			  // mode edit node untuk mengubah label node
+			  if (editMode) {
+				if (clickedNode) {
+				  const newLabel = prompt(
+					"Masukkan label baru untuk node:",
+					clickedNode.label
+				  );
+				  if (newLabel !== null && newLabel.trim() !== "") {
+					clickedNode.label = newLabel;
+				  }
+				}
+			  }
+			  // mode edit node untuk mengubah label node 
+			  // mode pathNode untuk menambah garis antara node 
+			  else if (pathMode) {
+				if (clickedNode) {
+				  if (!startNode) {
+					startNode = clickedNode;
+					endNode = null;
+				  } else {
+					endNode = clickedNode;
+					if (startNode !== endNode) {
+					  paths.push({ start: startNode, end: endNode });
+					}
+					startNode = null;
+					endNode = null;
+				  }
+				}
+			  }
+			  // mode pathNode untuk menambah garis antara node 
+			  else {
+				// mode tambah node baru
+				if (!clickedNode) drawBox(x, y);
+			  }
+	  
+			  redrawCanvas();
+			});
+		  </script>		
+	</body>
+</html>

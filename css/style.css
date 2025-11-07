@@ -23,11 +23,21 @@ canvas {
 }
 
 button {
-    display: block;
-    margin: 20px auto;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
+	padding: 10px 20px;
+	font-size: 16px;
+	cursor: pointer;
+	border: none;
+	border-radius: 6px;
+	background-color: #ddd;
+	transition: background-color 0.3s;
 }
 
-        }
+button:hover {
+	background-color: #ccc;
+}
+
+.buttons {
+	display: flex;
+	gap: 10px; /* jarak antar tombol */
+	margin-top: 20px;
+}
