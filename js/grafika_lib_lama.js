@@ -48,22 +48,6 @@ export function gbr_titik(imageData, x, y, r, g, b, canvas) {
 	}
 }
 
-export function lingkaran_polar(imageDataTemp, xc, yc, radius, r, g, b) {
-    for (let theta = 0; theta < Math.PI * 2; theta += 0.01) {
-        const x = xc + radius * Math.cos(theta);
-        const y = yc + radius * Math.sin(theta);
-        gbr_titik(imageDataTemp, Math.ceil(x), Math.ceil(y), r, g, b);
-    }
-}
-
-export function ellipse_polar(imageDataTemp, xc, yc, radiusX, radiusY, r, g, b) {
-    for (let theta = 0; theta < Math.PI * 2; theta += 0.01) {
-        const x = xc + radiusX * Math.cos(theta);
-        const y = yc + radiusY * Math.sin(theta);
-        gbr_titik(imageDataTemp, Math.ceil(x), Math.ceil(y), r, g, b);
-    }
-}
-
 export function dda_line(imageData, x1, y1, x2, y2, r, g, b, canvas) {
     const dx = x2 - x1;
     const dy = y2 - y1;
